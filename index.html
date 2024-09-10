@@ -56,7 +56,7 @@
   <body>
     <!-- Header -->
     <header>
-      <h1>Agenda de Citas</h1>
+      <h1>Agenda de Citas - Diseñado por OM</h1>
     </header>
 
     <!-- Tabs -->
@@ -75,6 +75,11 @@
         <div class="input-field">
           <input id="nombre" type="text" required />
           <label for="nombre">Cita con</label>
+        </div>
+        <!-- Nuevo campo Lugar -->
+        <div class="input-field">
+          <input id="lugar" type="text" required />
+          <label for="lugar">Lugar</label>
         </div>
         <div class="input-field">
           <input id="motivo" type="text" required />
@@ -129,6 +134,7 @@
 
         // Obtener los valores del formulario
         const nombre = document.getElementById("nombre").value;
+        const lugar = document.getElementById("lugar").value; // Nuevo campo Lugar
         const motivo = document.getElementById("motivo").value;
         const dia = document.getElementById("dia").value;
         const hora = document.getElementById("hora").value;
@@ -136,11 +142,11 @@
 
         if (editIndex !== null) {
           // Si estamos editando, actualizamos la cita existente
-          citas[editIndex] = { nombre, motivo, dia, hora, comentarios };
+          citas[editIndex] = { nombre, lugar, motivo, dia, hora, comentarios }; // Incluimos el lugar
           editIndex = null; // Reseteamos el índice de edición
         } else {
           // Si no estamos editando, agregamos una nueva cita
-          citas.push({ nombre, motivo, dia, hora, comentarios });
+          citas.push({ nombre, lugar, motivo, dia, hora, comentarios }); // Incluimos el lugar
         }
 
         // Limpiar el formulario
@@ -160,6 +166,7 @@
           citaItem.classList.add("collection-item");
           citaItem.innerHTML = `
                     <strong>Cita con:</strong> ${cita.nombre} <br>
+                    <strong>Lugar:</strong> ${cita.lugar} <br>
                     <strong>Motivo:</strong> ${cita.motivo} <br>
                     <strong>Día:</strong> ${cita.dia} <br>
                     <strong>Hora:</strong> ${cita.hora} <br>
@@ -174,6 +181,7 @@
       function editarCita(index) {
         const cita = citas[index];
         document.getElementById("nombre").value = cita.nombre;
+        document.getElementById("lugar").value = cita.lugar; // Incluimos el lugar en la edición
         document.getElementById("motivo").value = cita.motivo;
         document.getElementById("dia").value = cita.dia;
         document.getElementById("hora").value = cita.hora;
