@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agenda de Citas</title>
+    <!-- Importar Material Design -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Estilos personalizados -->
+    <style>
+      /* Estilo del header */
+      header {
+        background-color: #1976d2;
+        padding: 10px;
+        text-align: center;
+        color: white;
+      }
+
+      h1 {
+        margin: 0;
+      }
+
+      /* Estilo del contenedor principal */
+      .container {
+        margin-top: 20px;
+        margin-bottom: 60px; /* Espacio extra para que no se superponga con el footer */
+      }
+
+      /* Footer fijo */
+      footer {
+        background-color: #1976d2;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      /* Para asegurar que el contenido no se superponga con el footer en pantallas pequeñas */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <h1>Agenda de Citas</h1>
+    </header>
+
+    <!-- Tabs -->
+    <div class="container">
+      <ul id="tabs-swipe-demo" class="tabs">
+        <li class="tab col s6">
+          <a class="active" href="#formulario">Formulario</a>
+        </li>
+        <li class="tab col s6"><a href="#citas">Citas</a></li>
+      </ul>
+    </div>
+
+    <!-- Formulario de citas -->
+    <div id="formulario" class="col s12 container">
+      <form id="citaForm">
+        <div class="input-field">
+          <input id="nombre" type="text" required />
+          <label for="nombre">Cita con</label>
+        </div>
+        <div class="input-field">
+          <input id="motivo" type="text" required />
+          <label for="motivo">Motivo</label>
+        </div>
+        <div class="input-field">
+          <input id="dia" type="date" required />
+          <label for="dia">Día</label>
+        </div>
+        <div class="input-field">
+          <input id="hora" type="time" required />
+          <label for="hora">Hora</label>
+        </div>
+        <div class="input-field">
+          <textarea id="comentarios" class="materialize-textarea"></textarea>
+          <label for="comentarios">Comentarios</label>
+        </div>
+        <button type="submit" class="btn blue">Agregar Cita</button>
+      </form>
+    </div>
+
+    <!-- Lista de citas -->
+    <div id="citas" class="col s12 container">
+      <ul id="listaCitas" class="collection">
+        <!-- Las citas agregadas aparecerán aquí -->
+      </ul>
+    </div>
+
+    <!-- Footer fijo -->
+    <footer>
+      <p>Diseñado por OM</p>
+    </footer>
+
+    <!-- Importar scripts de Materialize y JS personalizado -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Inicializa los tabs
+        var elems = document.querySelectorAll(".tabs");
+        var instances = M.Tabs.init(elems);
+      });
+
+      // Funcionalidad para manejar el formulario
+      const citaForm = document.getElementById("citaForm");
+      const listaCitas = document.getElementById("listaCitas");
+
+      let citas = [];
+      let editIndex = null; // Para controlar el índice de la cita a editar
+
+      citaForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // Obtener los valores del formulario
+        const nombre = document.getElementById("nombre").value;
+        const motivo = document.getElementById("motivo").value;
+        const dia = document.getElementById("dia").value;
+        const hora = document.getElementById("hora").value;
+        const comentarios = document.getElementById("comentarios").value;
+
+        if (editIndex !== null) {
+          // Si estamos editando, actualizamos la cita existente
+          citas[editIndex] = { nombre, motivo, dia, hora, comentarios };
+          editIndex = null; // Reseteamos el índice de edición
+        } else {
+          // Si no estamos editando, agregamos una nueva cita
+          citas.push({ nombre, motivo, dia, hora, comentarios });
+        }
+
+        // Limpiar el formulario
+        citaForm.reset();
+
+        // Actualizar la lista de citas
+        renderCitas();
+      });
+
+      function renderCitas() {
+        // Limpiar la lista de citas
+        listaCitas.innerHTML = "";
+
+        // Recorrer las citas y crear elementos para cada una
+        citas.forEach((cita, index) => {
+          const citaItem = document.createElement("li");
+          citaItem.classList.add("collection-item");
+          citaItem.innerHTML = `
+                    <strong>Cita con:</strong> ${cita.nombre} <br>
+                    <strong>Motivo:</strong> ${cita.motivo} <br>
+                    <strong>Día:</strong> ${cita.dia} <br>
+                    <strong>Hora:</strong> ${cita.hora} <br>
+                    <strong>Comentarios:</strong> ${cita.comentarios} <br>
+                    <i class="material-icons action-icons" onclick="editarCita(${index})">edit</i>
+                    <i class="material-icons action-icons" onclick="eliminarCita(${index})">delete</i>
+                `;
+          listaCitas.appendChild(citaItem);
+        });
+      }
+
+      function editarCita(index) {
+        const cita = citas[index];
+        document.getElementById("nombre").value = cita.nombre;
+        document.getElementById("motivo").value = cita.motivo;
+        document.getElementById("dia").value = cita.dia;
+        document.getElementById("hora").value = cita.hora;
+        document.getElementById("comentarios").value = cita.comentarios;
+
+        // Mover el scroll al formulario para editar fácilmente
+        M.updateTextFields(); // Para que los labels se ajusten correctamente
+        editIndex = index; // Guardar el índice de la cita que se está editando
+      }
+
+      function eliminarCita(index) {
+        citas.splice(index, 1); // Eliminar la cita del array
+        renderCitas(); // Actualizar la lista de citas
+      }
+    </script>
+  </body>
+</html>
