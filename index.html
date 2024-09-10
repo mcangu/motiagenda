@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agenda de Citas</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+
     <!-- Importar Material Design -->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -120,6 +124,9 @@
         // Inicializa los tabs
         var elems = document.querySelectorAll(".tabs");
         var instances = M.Tabs.init(elems);
+
+        // Cargar citas desde LocalStorage cuando la página se carga
+        cargarCitas();
       });
 
       // Funcionalidad para manejar el formulario
@@ -148,6 +155,9 @@
           // Si no estamos editando, agregamos una nueva cita
           citas.push({ nombre, lugar, motivo, dia, hora, comentarios }); // Incluimos el lugar
         }
+
+        // Guardar las citas en LocalStorage
+        guardarCitas();
 
         // Limpiar el formulario
         citaForm.reset();
@@ -194,7 +204,22 @@
 
       function eliminarCita(index) {
         citas.splice(index, 1); // Eliminar la cita del array
+        guardarCitas(); // Actualizar el LocalStorage después de eliminar
         renderCitas(); // Actualizar la lista de citas
+      }
+
+      // Guardar las citas en LocalStorage
+      function guardarCitas() {
+        localStorage.setItem("citas", JSON.stringify(citas)); // Convertir las citas a JSON y guardarlas
+      }
+
+      // Cargar las citas desde LocalStorage
+      function cargarCitas() {
+        const citasGuardadas = localStorage.getItem("citas"); // Obtener las citas guardadas
+        if (citasGuardadas) {
+          citas = JSON.parse(citasGuardadas); // Convertir el JSON a array
+          renderCitas(); // Renderizar las citas almacenadas
+        }
       }
     </script>
   </body>
