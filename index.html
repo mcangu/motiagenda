@@ -77,7 +77,7 @@
     <header>
       <img src="images/logomotiagenda.png" alt="Logo" />
       <!-- Inserta tu logo aquí -->
-      <h5>MotiAgenda de Citas</h5>
+      <h1>MotiAgenda de Citas</h1>
     </header>
 
     <!-- Tabs -->
@@ -206,6 +206,7 @@
                     <strong>Comentarios:</strong> ${cita.comentarios} <br>
                     <i class="material-icons action-icons" onclick="editarCita(${index})">edit</i>
                     <i class="material-icons action-icons" onclick="eliminarCita(${index})">delete</i>
+                    <i class="material-icons action-icons" onclick="compartirCita(${index})">share</i>
                 `;
           listaCitas.appendChild(citaItem);
         });
@@ -240,6 +241,45 @@
         citas.splice(index, 1); // Eliminar la cita del array
         guardarCitas(); // Actualizar el LocalStorage después de eliminar
         renderCitas(); // Actualizar la lista de citas
+      }
+
+      function compartirCita(index) {
+        const cita = citas[index];
+        const citaDetalles = `
+                Cita con: ${cita.nombre}
+                Lugar: ${cita.lugar}
+                Motivo: ${cita.motivo}
+                Día: ${cita.dia}
+                Hora: ${cita.hora}
+                Comentarios: ${cita.comentarios}
+            `;
+
+        if (navigator.share) {
+          navigator
+            .share({
+              title: "Detalles de la Cita",
+              text: citaDetalles,
+            })
+            .then(() => {
+              console.log("Cita compartida exitosamente.");
+            })
+            .catch((err) => {
+              console.log("Error al compartir la cita:", err);
+            });
+        } else {
+          // Si Web Share API no está disponible, copiamos los detalles al portapapeles
+          copiarAlPortapapeles(citaDetalles);
+          alert("Los detalles de la cita han sido copiados al portapapeles.");
+        }
+      }
+
+      function copiarAlPortapapeles(text) {
+        const tempInput = document.createElement("textarea");
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
       }
 
       // Guardar las citas en LocalStorage
