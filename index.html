@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agenda de Citas</title>
 
-    <!-- Favicon >-->
-    <link rel="icon" type="image/png" href="images/favicon.ico" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png" />
 
     <!-- Importar Material Design -->
     <link
@@ -23,13 +23,24 @@
       /* Estilo del header */
       header {
         background-color: #1976d2;
-        padding: 10px;
+        padding: 20px;
         text-align: center;
         color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Estilo para el logo */
+      .logo {
+        width: 80px; /* Ajusta el tamaño del logo según sea necesario */
+        height: auto;
+        margin-right: 10px;
       }
 
       h1 {
         margin: 0;
+        font-size: 2rem;
       }
 
       /* Estilo del contenedor principal */
@@ -49,6 +60,12 @@
         width: 100%;
       }
 
+      /* Estilo para mostrar el icono de mano al pasar sobre los íconos */
+      .action-icons {
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
       /* Para asegurar que el contenido no se superponga con el footer en pantallas pequeñas */
       @media (max-width: 600px) {
         h1 {
@@ -60,7 +77,8 @@
   <body>
     <!-- Header -->
     <header>
-      <h1>Agenda de Citas - Diseñado por OM</h1>
+      <img src="images/logomotiagenda.png" alt="Logo" class="logo" />
+      <h1>Agenda de Citas</h1>
     </header>
 
     <!-- Tabs -->
@@ -132,6 +150,7 @@
       // Funcionalidad para manejar el formulario
       const citaForm = document.getElementById("citaForm");
       const listaCitas = document.getElementById("listaCitas");
+      const btnSubmit = document.querySelector('button[type="submit"]');
 
       let citas = [];
       let editIndex = null; // Para controlar el índice de la cita a editar
@@ -141,7 +160,7 @@
 
         // Obtener los valores del formulario
         const nombre = document.getElementById("nombre").value;
-        const lugar = document.getElementById("lugar").value; // Nuevo campo Lugar
+        const lugar = document.getElementById("lugar").value;
         const motivo = document.getElementById("motivo").value;
         const dia = document.getElementById("dia").value;
         const hora = document.getElementById("hora").value;
@@ -149,11 +168,12 @@
 
         if (editIndex !== null) {
           // Si estamos editando, actualizamos la cita existente
-          citas[editIndex] = { nombre, lugar, motivo, dia, hora, comentarios }; // Incluimos el lugar
+          citas[editIndex] = { nombre, lugar, motivo, dia, hora, comentarios };
           editIndex = null; // Reseteamos el índice de edición
+          btnSubmit.textContent = "Agregar Cita"; // Volver el botón a su estado original
         } else {
           // Si no estamos editando, agregamos una nueva cita
-          citas.push({ nombre, lugar, motivo, dia, hora, comentarios }); // Incluimos el lugar
+          citas.push({ nombre, lugar, motivo, dia, hora, comentarios });
         }
 
         // Guardar las citas en LocalStorage
@@ -164,6 +184,10 @@
 
         // Actualizar la lista de citas
         renderCitas();
+
+        // Cambiar de tab automáticamente a la lista de citas después de guardar
+        const instance = M.Tabs.getInstance(document.querySelector(".tabs"));
+        instance.select("citas");
       });
 
       function renderCitas() {
@@ -190,16 +214,27 @@
 
       function editarCita(index) {
         const cita = citas[index];
+
+        // Llenar el formulario con los datos de la cita seleccionada para editar
         document.getElementById("nombre").value = cita.nombre;
-        document.getElementById("lugar").value = cita.lugar; // Incluimos el lugar en la edición
+        document.getElementById("lugar").value = cita.lugar;
         document.getElementById("motivo").value = cita.motivo;
         document.getElementById("dia").value = cita.dia;
         document.getElementById("hora").value = cita.hora;
         document.getElementById("comentarios").value = cita.comentarios;
 
-        // Mover el scroll al formulario para editar fácilmente
-        M.updateTextFields(); // Para que los labels se ajusten correctamente
-        editIndex = index; // Guardar el índice de la cita que se está editando
+        // Actualizar los labels flotantes del formulario para que no se superpongan
+        M.updateTextFields();
+
+        // Cambiar el botón a modo edición
+        btnSubmit.textContent = "Guardar Cambios";
+
+        // Guardar el índice de la cita que estamos editando
+        editIndex = index;
+
+        // Cambiar al tab del formulario para que el usuario pueda editar los campos
+        const instance = M.Tabs.getInstance(document.querySelector(".tabs"));
+        instance.select("formulario");
       }
 
       function eliminarCita(index) {
