@@ -23,24 +23,13 @@
       /* Estilo del header */
       header {
         background-color: #1976d2;
-        padding: 20px;
+        padding: 10px;
         text-align: center;
         color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      /* Estilo para el logo */
-      .logo {
-        width: 80px; /* Ajusta el tamaño del logo según sea necesario */
-        height: auto;
-        margin-right: 10px;
       }
 
       h1 {
         margin: 0;
-        font-size: 2rem;
       }
 
       /* Estilo del contenedor principal */
@@ -49,15 +38,16 @@
         margin-bottom: 60px; /* Espacio extra para que no se superponga con el footer */
       }
 
-      /* Footer fijo */
+      /* Footer reducido */
       footer {
         background-color: #1976d2;
         color: white;
         text-align: center;
-        padding: 10px 0;
+        padding: 5px 0; /* Reducimos el padding a 5px */
         position: fixed;
         bottom: 0;
         width: 100%;
+        font-size: 0.8rem; /* Disminuimos el tamaño de la fuente */
       }
 
       /* Estilo para mostrar el icono de mano al pasar sobre los íconos */
@@ -77,8 +67,7 @@
   <body>
     <!-- Header -->
     <header>
-      <img src="images/logomotiagenda.png" alt="Logo" class="logo" />
-      <h1>Agenda de Citas</h1>
+      <h1>Agenda de Citas - Diseñado por OM</h1>
     </header>
 
     <!-- Tabs -->
@@ -130,7 +119,7 @@
       </ul>
     </div>
 
-    <!-- Footer fijo -->
+    <!-- Footer reducido -->
     <footer>
       <p>Diseñado por OM</p>
     </footer>
