@@ -20,12 +20,20 @@
 
     <!-- Estilos personalizados -->
     <style>
-      /* Estilo del header */
+      /* Estilo del header con flexbox */
       header {
         background-color: #1976d2;
         padding: 10px;
-        text-align: center;
+        display: flex;
+        align-items: center; /* Alinea verticalmente el logo y el texto */
+        justify-content: center; /* Centra horizontalmente el contenido */
         color: white;
+      }
+
+      header img {
+        max-width: 50px; /* Tamaño máximo del logo */
+        height: auto;
+        margin-right: 15px; /* Espacio entre el logo y el texto */
       }
 
       h1 {
@@ -65,9 +73,11 @@
     </style>
   </head>
   <body>
-    <!-- Header -->
+    <!-- Header con logo a la izquierda -->
     <header>
-      <h1>Agenda de Citas - Diseñado por OM</h1>
+      <img src="images/logomotiagenda.png" alt="Logo" />
+      <!-- Inserta tu logo aquí -->
+      <h5>MotiAgenda de Citas</h5>
     </header>
 
     <!-- Tabs -->
